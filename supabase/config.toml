@@ -1,0 +1,54 @@
+project_id = "xbpxwykdxjbzfjvhqmnz"
+
+[auth]
+  enable_signup = true
+
+[auth.email]
+  enable_signup = true
+  # New accounts must click the confirmation link before they can sign in.
+  enable_confirmations = true
+  secure_password_change = true
+
+# Gmail SMTP. SMTP_USER must be the full Gmail address and SMTP_PASS a Google
+# App Password (2-Step Verification required) — normal account passwords are rejected.
+[auth.email.smtp]
+  enabled = true
+  host = "smtp.gmail.com"
+  port = 465
+  user = "env(SMTP_USER)"
+  pass = "env(SMTP_PASS)"
+  # Gmail rewrites the From header to the authenticated account, so admin_email
+  # must match SMTP_USER (or a verified "Send mail as" alias).
+  admin_email = "env(SMTP_USER)"
+  sender_name = "Murivest Operations"
+
+[auth.email.template.confirmation]
+  subject = "Confirm your Murivest Operations account"
+  content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.invite]
+  subject = "You have been invited to Murivest Operations"
+  content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.recovery]
+  subject = "Reset your Murivest Operations password"
+  content_path = "./supabase/templates/recovery.html"
+
+[functions]
+  # Edge functions configuration
+  send-email = { 
+    verify_jwt = false,
+    import_map = "supabase/functions/send-email/import_map.json"
+  }
+  notification-cron = { 
+    verify_jwt = false,
+    import_map = "supabase/functions/notification-cron/import_map.json"
+  }
+
+[cron]
+  # Run every 15 minutes during business hours (8am-6pm EAT)
+  # EAT is UTC+3, so 5am-3pm UTC
+  notification-cron = "*/15 5-15 * * 1-5"
+  
+  # Also run once daily at 7am EAT (4am UTC) for morning prep
+  daily-morning-check = "0 4 * * 1-5"

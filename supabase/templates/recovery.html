@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
+  <title>Password Reset Request — Murivest</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+</head>
+<body style="margin:0; padding:0; word-spacing:normal; background-color:#f3f1ea;">
+
+  <!-- Preheader (hidden) -->
+  <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">
+    A password reset was requested for your Murivest account. If this was not you, no action is required.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3f1ea;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%;">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" style="background-color:#0d1420; padding:36px 24px 32px; border-bottom:1px solid #b8935a;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td align="center" style="border:1px solid #b8935a; padding:10px 18px;">
+                    <span style="font-family:Georgia, 'Times New Roman', serif; font-size:16px; letter-spacing:0.35em; color:#f5f2ea; text-transform:uppercase; padding-left:0.35em;">Murivest</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:16px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:#8a93a3; mso-line-height-rule:exactly; line-height:16px;">
+                Private Wealth &nbsp;&middot;&nbsp; Internal Operations
+              </p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background-color:#ffffff; padding:44px 48px 40px; border-left:1px solid #e5e1d6; border-right:1px solid #e5e1d6;">
+
+              <p style="margin:0 0 24px; font-family:Georgia, 'Times New Roman', serif; font-size:22px; line-height:30px; color:#0d1420;">
+                Password Reset Request
+              </p>
+
+              <p style="margin:0 0 16px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:24px; color:#3d4654;">
+                A request was received to reset the password for <strong style="color:#0d1420;">{{ .Email }}</strong>.
+              </p>
+
+              <p style="margin:0 0 28px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:24px; color:#3d4654;">
+                To establish a new password, kindly use the button below. For your security, the link may be used once and will expire shortly.
+              </p>
+
+              <!-- Button -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 28px;">
+                <tr>
+                  <td align="center" bgcolor="#b8935a" style="border:1px solid #9a7a3f;">
+                    <!--[if mso]>
+                    <v:rect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ .ConfirmationURL }}" style="height:48px;v-text-anchor:middle;width:250px;" stroke="f" fillcolor="#b8935a">
+                      <center style="color:#0d1420; font-family:Arial,sans-serif; font-size:13px; font-weight:bold; letter-spacing:2px;">SET A NEW PASSWORD</center>
+                    </v:rect>
+                    <![endif]-->
+                    <!--[if !mso]><!-->
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block; padding:16px 44px; font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; letter-spacing:2px; text-transform:uppercase; color:#0d1420; text-decoration:none;">
+                      Set a New Password
+                    </a>
+                    <!--<![endif]-->
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Fallback link -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f7f5ef; border:1px solid #e5e1d6; margin-bottom:28px;">
+                <tr>
+                  <td style="padding:16px 20px;">
+                    <p style="margin:0 0 6px; font-family:Arial, Helvetica, sans-serif; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:#8a93a3; mso-line-height-rule:exactly; line-height:14px;">
+                      Alternative method
+                    </p>
+                    <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:20px; word-break:break-all;">
+                      <a href="{{ .ConfirmationURL }}" style="color:#9a7a3f; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Security notice -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="border-top:1px solid #e5e1d6; padding-top:20px;">
+                    <p style="margin:0 0 8px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:20px; color:#8a93a3;">
+                      <strong style="color:#3d4654;">Did not request this?</strong> You may disregard this message — your password will remain unchanged. For additional assurance, contact your relationship manager.
+                    </p>
+                    <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:20px; color:#8a93a3;">
+                      Murivest will never ask you to confirm or disclose your password, credentials, or personal information via email or telephone.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="background-color:#0d1420; padding:28px 24px; border-top:1px solid #b8935a;">
+              <p style="margin:0 0 6px; font-family:Georgia, 'Times New Roman', serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#b8935a; mso-line-height-rule:exactly; line-height:16px;">
+                Murivest Group Ltd.
+              </p>
+              <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:10px; line-height:18px; color:#5d6675;">
+                Strictly Confidential — Internal Use Only<br />
+                This communication is intended solely for the named recipient. Please do not forward or distribute without prior authorisation.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
