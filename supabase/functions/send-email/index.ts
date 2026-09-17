@@ -38,6 +38,8 @@ serve(async (req) => {
     const smtpUser = Deno.env.get('SMTP_USER')
     const smtpPass = Deno.env.get('SMTP_PASS')
     const senderName = Deno.env.get('SMTP_SENDER_NAME') ?? 'Murivest Operations'
+    const appUrl = Deno.env.get('APP_URL') || 'https://app.murivest.com'
+    const logoUrl = `${appUrl}/logo.webp`
 
     if (!smtpHost || !smtpUser || !smtpPass) {
       console.error('SMTP_HOST / SMTP_USER / SMTP_PASS not configured')
@@ -105,7 +107,8 @@ serve(async (req) => {
           module: item.module,
           recordId: item.record_id,
           type: item.type,
-          systemUrl: `${Deno.env.get('APP_URL') || 'https://app.murivest.com'}/app/${item.module}`
+          systemUrl: `${appUrl}/app/${item.module}`,
+          logoUrl
         })
 
         // Send via SMTP
@@ -148,7 +151,7 @@ serve(async (req) => {
   }
 })
 
-function buildEmailHtml({ recipientName, title, body, module, recordId, type, systemUrl }: {
+function buildEmailHtml({ recipientName, title, body, module, recordId, type, systemUrl, logoUrl }: {
   recipientName: string
   title: string
   body: string | null
@@ -156,6 +159,7 @@ function buildEmailHtml({ recipientName, title, body, module, recordId, type, sy
   recordId: string | null
   type: string
   systemUrl: string
+  logoUrl: string
 }): string {
   const moduleLabels: Record<string, string> = {
     inquiries: 'Inquiries',
@@ -204,6 +208,7 @@ function buildEmailHtml({ recipientName, title, body, module, recordId, type, sy
   <div style="background: #0f172a; border-radius: 8px; overflow: hidden;">
     <!-- Header -->
     <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 30px 24px; text-align: center; border-bottom: 3px solid #c9a84c;">
+      <img src="${logoUrl}" width="56" alt="Murivest" style="display: block; margin: 0 auto 16px; width: 56px; height: auto; border: 0;">
       <div style="display: inline-block; background: #c9a84c; color: #0f172a; padding: 8px 16px; border-radius: 4px; font-weight: 600; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase;">MURIVEST</div>
       <p style="margin: 12px 0 0; color: #94a3b8; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;">Internal Operations System</p>
     </div>

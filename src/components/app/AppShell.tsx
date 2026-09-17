@@ -216,11 +216,19 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-5 py-4">
-          <div>
-            <p className="wordmark text-base text-sidebar-primary">MURIVEST</p>
-            <p className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-sidebar-foreground/60">
-              Internal System
-            </p>
+          <div className="flex items-center gap-2.5">
+            <img
+              src={COMPANY.logo}
+              alt=""
+              aria-hidden="true"
+              className="size-8 shrink-0 rounded-sm object-contain"
+            />
+            <div>
+              <p className="wordmark text-base text-sidebar-primary">MURIVEST</p>
+              <p className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-sidebar-foreground/60">
+                Internal System
+              </p>
+            </div>
           </div>
           <button
             className="lg:hidden"
@@ -293,6 +301,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               <p className="text-sm font-semibold text-foreground">{COMPANY.system}</p>
               <p className="text-[11px] text-muted-foreground">{COMPANY.subtitle}</p>
             </div>
+            <img
+              src={COMPANY.logo}
+              alt={COMPANY.name}
+              className="size-7 rounded-sm object-contain sm:hidden"
+            />
           </div>
           <div className="flex items-center gap-1.5">
             <NotificationBell />

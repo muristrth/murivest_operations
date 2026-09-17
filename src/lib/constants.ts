@@ -25,7 +25,8 @@ export type EscalationStatus = "open" | "under_review" | "resolved" | "closed";
 export const COMPANY = {
   name: "Murivest Group Ltd.",
   system: "Murivest Internal System",
-  subtitle: "Internal Operations, Secretariat & Capital Advisory",
+  subtitle: "Internal Operations",
+  logo: "/logo.webp",
 };
 
 export const ROLE_LABEL: Record<AppRole, string> = {

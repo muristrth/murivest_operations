@@ -77,6 +77,11 @@ function LoginPage() {
     <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
       <div className="relative hidden flex-col justify-between bg-sidebar px-12 py-14 text-sidebar-foreground lg:flex">
         <div>
+          <img
+            src={COMPANY.logo}
+            alt={COMPANY.name}
+            className="mb-4 h-12 w-auto object-contain"
+          />
           <p className="wordmark text-2xl text-sidebar-primary">MURIVEST</p>
           <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-sidebar-foreground/60">
             Group Ltd.
@@ -103,6 +108,11 @@ function LoginPage() {
       <div className="flex items-center justify-center bg-background px-6 py-12">
         <div className="w-full max-w-sm">
           <div className="lg:hidden">
+            <img
+              src={COMPANY.logo}
+              alt={COMPANY.name}
+              className="mb-3 h-10 w-auto object-contain"
+            />
             <p className="wordmark text-xl text-foreground">MURIVEST</p>
             <p className="mb-8 mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               Internal System
