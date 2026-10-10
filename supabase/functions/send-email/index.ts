@@ -1,5 +1,8 @@
+// @ts-ignore Deno resolves URL imports; Node/TypeScript tooling may not.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// @ts-ignore Deno resolves URL imports; Node/TypeScript tooling may not.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+// @ts-ignore Deno resolves URL imports; Node/TypeScript tooling may not.
 import { SMTPClient } from 'https://deno.land/x/denomailer@1.6.0/mod.ts'
 
 const corsHeaders = {
@@ -25,20 +28,36 @@ interface Profile {
   email_notifications: boolean
 }
 
-serve(async (req) => {
+interface EmailHtmlParams {
+  recipientName: string
+  title: string
+  body: string | null
+  module: string | null
+  recordId: string | null
+  type: string
+  systemUrl: string
+  logoUrl: string
+}
+
+const getEnv = (name: string): string | undefined =>
+  (globalThis as typeof globalThis & {
+    Deno: { env: { get(name: string): string | undefined } }
+  }).Deno.env.get(name)
+
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const smtpHost = Deno.env.get('SMTP_HOST')
-    const smtpPort = Number(Deno.env.get('SMTP_PORT') ?? '465')
-    const smtpUser = Deno.env.get('SMTP_USER')
-    const smtpPass = Deno.env.get('SMTP_PASS')
-    const senderName = Deno.env.get('SMTP_SENDER_NAME') ?? 'Murivest Operations'
-    const appUrl = Deno.env.get('APP_URL') || 'https://app.murivest.com'
+    const supabaseUrl = getEnv('SUPABASE_URL')!
+    const supabaseServiceKey = getEnv('SUPABASE_SERVICE_ROLE_KEY')!
+    const smtpHost = getEnv('SMTP_HOST')
+    const smtpPort = Number(getEnv('SMTP_PORT') ?? '465')
+    const smtpUser = getEnv('SMTP_USER')
+    const smtpPass = getEnv('SMTP_PASS')
+    const senderName = getEnv('SMTP_SENDER_NAME') ?? 'Murivest Operations'
+    const appUrl = getEnv('APP_URL') || 'https://app.murivest.com'
     const logoUrl = `${appUrl}/logo.webp`
 
     if (!smtpHost || !smtpUser || !smtpPass) {
@@ -127,7 +146,7 @@ serve(async (req) => {
         // Small delay to avoid rate limits
         await new Promise(r => setTimeout(r, 100))
 
-      } catch (err) {
+      } catch (err: any) {
         console.error(`Failed to send email ${item.id}:`, err)
         errors.push(`${item.id}: ${err.message}`)
       }
@@ -142,7 +161,7 @@ serve(async (req) => {
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
-  } catch (err) {
+  } catch (err: any) {
     console.error('Edge function error:', err)
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
@@ -151,16 +170,7 @@ serve(async (req) => {
   }
 })
 
-function buildEmailHtml({ recipientName, title, body, module, recordId, type, systemUrl, logoUrl }: {
-  recipientName: string
-  title: string
-  body: string | null
-  module: string | null
-  recordId: string | null
-  type: string
-  systemUrl: string
-  logoUrl: string
-}): string {
+function buildEmailHtml({ recipientName, title, body, module, recordId, type, systemUrl, logoUrl }: EmailHtmlParams): string {
   const moduleLabels: Record<string, string> = {
     inquiries: 'Inquiries',
     calls: 'Call Log',

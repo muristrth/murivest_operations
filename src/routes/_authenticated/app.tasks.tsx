@@ -253,9 +253,10 @@ function TaskDetailDialog({ taskId }: { taskId: string }) {
     mutationFn: async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!comment.trim()) return;
+      if (!auth.user) throw new Error("You must be signed in to comment.");
       const { error } = await supabase.from("task_comments").insert({
         task_id: taskId,
-        user_id: auth.user?.id ?? null,
+        user_id: auth.user.id,
         body: comment,
       });
       if (error) throw error;
@@ -392,7 +393,7 @@ function TasksPage() {
       .some((v) => v!.toLowerCase().includes(search.toLowerCase())),
   );
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().slice(0, 10);
   const overdue = rows.filter((t) => t.status !== "completed" && t.status !== "cancelled" && t.due_date && t.due_date < today);
   const dueToday = rows.filter((t) => t.status !== "completed" && t.status !== "cancelled" && t.due_date === today);
 
@@ -450,10 +451,11 @@ function TasksPage() {
           {rows.map((t) => {
             const isOverdue = t.due_date && t.due_date < today && t.status !== "completed" && t.status !== "cancelled";
             const isDueToday = t.due_date === today && t.status !== "completed" && t.status !== "cancelled";
+            const statusLabel = TASK_STATUS[t.status as keyof typeof TASK_STATUS];
             return (
               <Row key={t.id}>
                 <Cell>
-                  <Link to={`/app/tasks/${t.id}`} className="font-medium underline-offset-4 hover:underline">
+                  <Link to={`/app/tasks/${t.id}` as never} className="font-medium underline-offset-4 hover:underline">
                     {t.title}
                   </Link>
                   {t.description ? <p className="text-xs text-muted-foreground">{text(t.description)}</p> : null}
@@ -470,8 +472,8 @@ function TasksPage() {
                   {isDueToday && <span className="ml-1 text-warning">(TODAY)</span>}
                 </Cell>
                 <Cell>
-                  <StatusBadge tone={TASK_STATUS[t.status] === "Completed" ? "success" : TASK_STATUS[t.status] === "In Progress" ? "info" : isOverdue ? "danger" : "neutral"}>
-                    {TASK_STATUS[t.status]}
+                  <StatusBadge tone={statusLabel === "Completed" ? "success" : statusLabel === "In Progress" ? "info" : isOverdue ? "danger" : "neutral"}>
+                    {statusLabel}
                   </StatusBadge>
                 </Cell>
                 <Cell muted className="text-xs">
@@ -494,7 +496,7 @@ function TasksPage() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Link to={`/app/tasks/${t.id}`} className="text-xs font-medium text-primary hover:underline">
+                    <Link to={`/app/tasks/${t.id}` as never} className="text-xs font-medium text-primary hover:underline">
                       Open
                     </Link>
                   )}

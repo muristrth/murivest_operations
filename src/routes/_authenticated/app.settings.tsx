@@ -18,22 +18,39 @@ export const Route = createFileRoute("/_authenticated/app/settings")({
 
 function SettingsPage() {
   const { profile, role, permissions, refresh } = useAuth();
+  const profileWithNotifications = profile as
+    | (NonNullable<typeof profile> & {
+        in_app_notifications?: boolean | null;
+        email_notifications?: boolean | null;
+        desktop_notifications?: boolean | null;
+        notify_task_assigned?: boolean | null;
+        notify_task_deadline?: boolean | null;
+        notify_appointment?: boolean | null;
+        notify_followup?: boolean | null;
+        notify_escalation?: boolean | null;
+        notify_management_message?: boolean | null;
+        notify_record_correction?: boolean | null;
+        notify_property_review?: boolean | null;
+        notify_announcement?: boolean | null;
+        notify_all_crud?: boolean | null;
+      })
+    | null;
   const [fullName, setFullName] = useState(profile?.full_name ?? "");
   const [jobTitle, setJobTitle] = useState(profile?.job_title ?? "");
   const [phone, setPhone] = useState(profile?.phone ?? "");
-  const [emailNotifications, setEmailNotifications] = useState(profile?.email_notifications ?? true);
-  const [desktopNotifications, setDesktopNotifications] = useState(profile?.desktop_notifications ?? true);
-  const [inAppNotifications, setInAppNotifications] = useState(profile?.in_app_notifications ?? true);
-  const [notifyTaskAssigned, setNotifyTaskAssigned] = useState(profile?.notify_task_assigned ?? true);
-  const [notifyTaskDeadline, setNotifyTaskDeadline] = useState(profile?.notify_task_deadline ?? true);
-  const [notifyAppointment, setNotifyAppointment] = useState(profile?.notify_appointment ?? true);
-  const [notifyFollowup, setNotifyFollowup] = useState(profile?.notify_followup ?? true);
-  const [notifyEscalation, setNotifyEscalation] = useState(profile?.notify_escalation ?? true);
-  const [notifyManagementMessage, setNotifyManagementMessage] = useState(profile?.notify_management_message ?? true);
-  const [notifyRecordCorrection, setNotifyRecordCorrection] = useState(profile?.notify_record_correction ?? true);
-  const [notifyPropertyReview, setNotifyPropertyReview] = useState(profile?.notify_property_review ?? true);
-  const [notifyAnnouncement, setNotifyAnnouncement] = useState(profile?.notify_announcement ?? true);
-  const [notifyAllCrud, setNotifyAllCrud] = useState(profile?.notify_all_crud ?? false);
+  const [emailNotifications, setEmailNotifications] = useState(profileWithNotifications?.email_notifications ?? true);
+  const [desktopNotifications, setDesktopNotifications] = useState(profileWithNotifications?.desktop_notifications ?? true);
+  const [inAppNotifications, setInAppNotifications] = useState(profileWithNotifications?.in_app_notifications ?? true);
+  const [notifyTaskAssigned, setNotifyTaskAssigned] = useState(profileWithNotifications?.notify_task_assigned ?? true);
+  const [notifyTaskDeadline, setNotifyTaskDeadline] = useState(profileWithNotifications?.notify_task_deadline ?? true);
+  const [notifyAppointment, setNotifyAppointment] = useState(profileWithNotifications?.notify_appointment ?? true);
+  const [notifyFollowup, setNotifyFollowup] = useState(profileWithNotifications?.notify_followup ?? true);
+  const [notifyEscalation, setNotifyEscalation] = useState(profileWithNotifications?.notify_escalation ?? true);
+  const [notifyManagementMessage, setNotifyManagementMessage] = useState(profileWithNotifications?.notify_management_message ?? true);
+  const [notifyRecordCorrection, setNotifyRecordCorrection] = useState(profileWithNotifications?.notify_record_correction ?? true);
+  const [notifyPropertyReview, setNotifyPropertyReview] = useState(profileWithNotifications?.notify_property_review ?? true);
+  const [notifyAnnouncement, setNotifyAnnouncement] = useState(profileWithNotifications?.notify_announcement ?? true);
+  const [notifyAllCrud, setNotifyAllCrud] = useState(profileWithNotifications?.notify_all_crud ?? false);
 
   const save = useMutation({
     mutationFn: async () => {
@@ -99,7 +116,7 @@ function SettingsPage() {
                     <Checkbox
                       id="emailNotifications"
                       checked={emailNotifications}
-                      onCheckedChange={setEmailNotifications}
+                      onCheckedChange={(checked) => setEmailNotifications(checked === true)}
                     />
                     <label htmlFor="emailNotifications" className="text-sm">Email</label>
                   </div>
@@ -109,7 +126,7 @@ function SettingsPage() {
                     <Checkbox
                       id="desktopNotifications"
                       checked={desktopNotifications}
-                      onCheckedChange={setDesktopNotifications}
+                      onCheckedChange={(checked) => setDesktopNotifications(checked === true)}
                     />
                     <label htmlFor="desktopNotifications" className="text-sm">Desktop/Browser</label>
                   </div>
@@ -119,7 +136,7 @@ function SettingsPage() {
                     <Checkbox
                       id="inAppNotifications"
                       checked={inAppNotifications}
-                      onCheckedChange={setInAppNotifications}
+                      onCheckedChange={(checked) => setInAppNotifications(checked === true)}
                     />
                     <label htmlFor="inAppNotifications" className="text-sm">In-App</label>
                   </div>
@@ -135,7 +152,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyTaskAssigned"
                       checked={notifyTaskAssigned}
-                      onCheckedChange={setNotifyTaskAssigned}
+                      onCheckedChange={(checked) => setNotifyTaskAssigned(checked === true)}
                     />
                     <label htmlFor="notifyTaskAssigned" className="text-sm">New task assigned</label>
                   </div>
@@ -145,7 +162,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyTaskDeadline"
                       checked={notifyTaskDeadline}
-                      onCheckedChange={setNotifyTaskDeadline}
+                      onCheckedChange={(checked) => setNotifyTaskDeadline(checked === true)}
                     />
                     <label htmlFor="notifyTaskDeadline" className="text-sm">Task deadline approaching/overdue</label>
                   </div>
@@ -161,7 +178,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyAppointment"
                       checked={notifyAppointment}
-                      onCheckedChange={setNotifyAppointment}
+                      onCheckedChange={(checked) => setNotifyAppointment(checked === true)}
                     />
                     <label htmlFor="notifyAppointment" className="text-sm">Appointment reminders</label>
                   </div>
@@ -171,7 +188,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyFollowup"
                       checked={notifyFollowup}
-                      onCheckedChange={setNotifyFollowup}
+                      onCheckedChange={(checked) => setNotifyFollowup(checked === true)}
                     />
                     <label htmlFor="notifyFollowup" className="text-sm">Follow-up due/overdue</label>
                   </div>
@@ -181,7 +198,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyEscalation"
                       checked={notifyEscalation}
-                      onCheckedChange={setNotifyEscalation}
+                      onCheckedChange={(checked) => setNotifyEscalation(checked === true)}
                     />
                     <label htmlFor="notifyEscalation" className="text-sm">Escalation assigned/resolved</label>
                   </div>
@@ -191,7 +208,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyManagementMessage"
                       checked={notifyManagementMessage}
-                      onCheckedChange={setNotifyManagementMessage}
+                      onCheckedChange={(checked) => setNotifyManagementMessage(checked === true)}
                     />
                     <label htmlFor="notifyManagementMessage" className="text-sm">Management messages</label>
                   </div>
@@ -201,7 +218,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyRecordCorrection"
                       checked={notifyRecordCorrection}
-                      onCheckedChange={setNotifyRecordCorrection}
+                      onCheckedChange={(checked) => setNotifyRecordCorrection(checked === true)}
                     />
                     <label htmlFor="notifyRecordCorrection" className="text-sm">Record returned for correction</label>
                   </div>
@@ -211,7 +228,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyPropertyReview"
                       checked={notifyPropertyReview}
-                      onCheckedChange={setNotifyPropertyReview}
+                      onCheckedChange={(checked) => setNotifyPropertyReview(checked === true)}
                     />
                     <label htmlFor="notifyPropertyReview" className="text-sm">Property review assigned</label>
                   </div>
@@ -221,7 +238,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyAnnouncement"
                       checked={notifyAnnouncement}
-                      onCheckedChange={setNotifyAnnouncement}
+                      onCheckedChange={(checked) => setNotifyAnnouncement(checked === true)}
                     />
                     <label htmlFor="notifyAnnouncement" className="text-sm">Internal announcements</label>
                   </div>
@@ -237,7 +254,7 @@ function SettingsPage() {
                     <Checkbox
                       id="notifyAllCrud"
                       checked={notifyAllCrud}
-                      onCheckedChange={setNotifyAllCrud}
+                      onCheckedChange={(checked) => setNotifyAllCrud(checked === true)}
                     />
                     <label htmlFor="notifyAllCrud" className="text-sm">
                       Receive email for ALL record creates, edits, archives and deletions (full audit trail)

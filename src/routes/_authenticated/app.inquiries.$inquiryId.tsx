@@ -89,10 +89,11 @@ function InquiryDetail() {
 
   const update = useMutation({
     mutationFn: async (patch: Record<string, unknown>) => {
+      if (!inquiry) throw new Error("Inquiry could not be found.");
       const { data: auth } = await supabase.auth.getUser();
       
       // Mandatory escalation check: prevent closing sensitive matters without escalation
-      if (patch.status && ["closed", "nurture", "converted"].includes(patch.status as string)) {
+      if (patch["status"] && ["closed", "nurture", "converted"].includes(patch["status"] as string)) {
         const sensitiveCategories = ["complaint", "negotiation", "valuation", "legal", "investment_advice"];
         const sensitiveEscalations = ["requires_md", "requires_management_decision", "urgent"];
         
@@ -175,7 +176,8 @@ function InquiryDetail() {
                       escalate.mutate();
                     }}
                   >
-                    <Field label="Category">
+                    <div className="grid gap-2">
+                      <label className="text-sm font-medium">Category</label>
                       <Select value={escalationForm.category} onValueChange={(v) => setEscalationForm({ ...escalationForm, category: v })}>
                         <SelectTrigger>
                           <SelectValue />
@@ -196,8 +198,9 @@ function InquiryDetail() {
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
-                    </Field>
-                    <Field label="Priority">
+                    </div>
+                    <div className="grid gap-2">
+                      <label className="text-sm font-medium">Priority</label>
                       <Select value={escalationForm.priority} onValueChange={(v) => setEscalationForm({ ...escalationForm, priority: v })}>
                         <SelectTrigger>
                           <SelectValue />
@@ -207,8 +210,9 @@ function InquiryDetail() {
                           <SelectItem value="urgent">Urgent</SelectItem>
                         </SelectContent>
                       </Select>
-                    </Field>
-                    <Field label="Reason / Details" className="sm:col-span-2">
+                    </div>
+                    <div className="grid gap-2 sm:col-span-2">
+                      <label className="text-sm font-medium">Reason / Details</label>
                       <Textarea
                         required
                         rows={4}
@@ -216,7 +220,7 @@ function InquiryDetail() {
                         onChange={(e) => setEscalationForm({ ...escalationForm, reason: e.target.value })}
                         placeholder="Describe why this requires management attention..."
                       />
-                    </Field>
+                    </div>
                     <DialogFooter className="sm:col-span-2">
                       <Button type="submit" disabled={escalate.isPending} variant="destructive">
                         {escalate.isPending ? "Escalating…" : "Escalate to MD"}

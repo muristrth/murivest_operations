@@ -309,6 +309,12 @@ function CorrespondencePage() {
       .some((v) => v!.toLowerCase().includes(search.toLowerCase())),
   );
 
+  function staffName(staff: { id: string; full_name: string; email: string; job_title: string; active: boolean; }[] | undefined, assigned_to: string | null): import("react").ReactNode {
+    if (!assigned_to) return "Unassigned";
+    const assignedStaff = staff?.find((member) => member.id === assigned_to);
+    return assignedStaff?.full_name || assignedStaff?.email || "Unknown staff";
+  }
+
   return (
     <div className="space-y-5">
       <PageHeader
@@ -361,10 +367,10 @@ function CorrespondencePage() {
               </Cell>
               <Cell>
                 <StatusBadge tone={c.type === "received" ? "info" : "success"}>
-                  {CORRESPONDENCE_TYPE[c.type]}
+                  {CORRESPONDENCE_TYPE[c.type as keyof typeof CORRESPONDENCE_TYPE]}
                 </StatusBadge>
               </Cell>
-              <Cell muted>{CORRESPONDENCE_CHANNEL[c.channel]}</Cell>
+              <Cell muted>{CORRESPONDENCE_CHANNEL[c.channel as keyof typeof CORRESPONDENCE_CHANNEL]}</Cell>
               <Cell>
                 <p className="font-medium">{c.from_to}</p>
               </Cell>
@@ -388,7 +394,7 @@ function CorrespondencePage() {
                   </Select>
                 ) : (
                   <StatusBadge tone={c.status === "completed" || c.status === "closed" ? "success" : c.status === "in_progress" ? "warning" : "neutral"}>
-                    {CORRESPONDENCE_STATUS[c.status]}
+                    {CORRESPONDENCE_STATUS[c.status as keyof typeof CORRESPONDENCE_STATUS]}
                   </StatusBadge>
                 )}
               </Cell>

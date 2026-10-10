@@ -70,21 +70,21 @@ function AppointmentDetailPage() {
 
   const save = useMutation({
     mutationFn: async () => {
-      const patch: Record<string, unknown> = {
-        client_name: form.client_name,
-        phone: form.phone || null,
-        email: form.email || null,
-        purpose: form.purpose || null,
-        scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
-        duration_minutes: Number(form.duration_minutes) || 60,
-        format: form.format,
-        location: form.location || null,
-        attendee_id: form.attendee_id || null,
-        status: form.status,
-        notes: form.notes || null,
+      const patch = {
+        ...(form['client_name'] !== undefined ? { client_name: form['client_name'] } : {}),
+        phone: form['phone'] || null,
+        email: form['email'] || null,
+        purpose: form['purpose'] || null,
+        ...(form['scheduled_at'] ? { scheduled_at: new Date(form['scheduled_at']).toISOString() } : {}),
+        duration_minutes: Number(form['duration_minutes']) || 60,
+        format: form['format'] as never,
+        location: form['location'] || null,
+        attendee_id: form['attendee_id'] || null,
+        status: form['status'] as never,
+        notes: form['notes'] || null,
         checklist: checklist,
-        confirmation_message: form.confirmation_message || null,
-        reminder_message: form.reminder_message || null,
+        confirmation_message: form['confirmation_message'] || null,
+        reminder_message: form['reminder_message'] || null,
       };
       const { error } = await supabase.from("appointments").update(patch).eq("id", appointmentId);
       if (error) throw error;
@@ -205,7 +205,7 @@ function AppointmentDetailPage() {
                 <Button size="sm" variant="outline" onClick={() => updateStatus.mutate("rescheduled")} disabled={appointment.status === "rescheduled"}>
                   Reschedule
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => updateStatus.mutate("cancelled")} disabled={appointment.status === "cancelled"}>
+                <Button size="sm" variant="outline" onClick={() => updateStatus.mutate("cancelled")}>
                   Cancel
                 </Button>
                 <Button size="sm" onClick={() => completeAppointment.mutate()} disabled={completeAppointment.isPending}>
@@ -238,8 +238,8 @@ function AppointmentDetailPage() {
                 <Input
                   type="datetime-local"
                   disabled={!can("appointments.edit")}
-                  value={form.scheduled_at ?? ""}
-                  onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })}
+                  value={form["scheduled_at"] ?? ""}
+                  onChange={(e) => setForm({ ...form, ["scheduled_at"]: e.target.value })}
                 />
               </Field>
               <Field label="Duration (minutes)">
@@ -248,13 +248,13 @@ function AppointmentDetailPage() {
                   min={15}
                   step={15}
                   disabled={!can("appointments.edit")}
-                  value={form.duration_minutes ?? ""}
+                  value={form["duration_minutes"] ?? ""}
                   onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })}
                 />
               </Field>
               <Field label="Format">
                 <Select
-                  value={form.format ?? appointment.format}
+                  value={form["format"] ?? appointment.format}
                   onValueChange={(v) => setForm({ ...form, format: v })}
                   disabled={!can("appointments.edit")}
                 >
@@ -273,7 +273,7 @@ function AppointmentDetailPage() {
               {input("location", "Location")}
               <Field label="Murivest attendee">
                 <Select
-                  value={form.attendee_id ?? appointment.attendee_id ?? "none"}
+                  value={form["attendee_id"] ?? appointment["attendee_id"] ?? "none"}
                   onValueChange={(v) => setForm({ ...form, attendee_id: v === "none" ? "" : v })}
                   disabled={!can("appointments.edit")}
                 >
@@ -292,7 +292,7 @@ function AppointmentDetailPage() {
               </Field>
               <Field label="Status">
                 <Select
-                  value={form.status ?? appointment.status}
+                  value={form["status"] ?? appointment["status"]}
                   onValueChange={(v) => { setForm({ ...form, status: v }); updateStatus.mutate(v); }}
                   disabled={!can("appointments.edit")}
                 >
@@ -354,13 +354,12 @@ function AppointmentDetailPage() {
             <DetailItem label="Attendee" value={staffName(staff, appointment.attendee_id)} />
             <DetailItem label="Format" value={APPOINTMENT_FORMAT[appointment.format]} />
             <DetailItem label="Location" value={text(appointment.location)} />
-            <DetailItem label="Created by" value={staffName(appointment.created_by)} />
+            <DetailItem label="Created by" value={staffName(staff, appointment.created_by)} />
             <DetailItem label="Created" value={formatDateTime(appointment.created_at)} />
             {appointment.outcome && <DetailItem label="Outcome" value={text(appointment.outcome)} />}
-            {appointment.next_action && <DetailItem label="Next action" value={text(appointment.next_action)} />}
           </Panel>
 
-          {can("appointments.edit") && appointment.status === "confirmed" && !checklist.confirmation_sent && (
+          {can("appointments.edit") && appointment.status === "confirmed" && !checklist["confirmation_sent"] && (
             <Panel title="Actions">
               <Button className="w-full" onClick={() => sendConfirmation.mutate()} disabled={sendConfirmation.isPending}>
                 {sendConfirmation.isPending ? "Generating…" : "Generate Confirmation Message"}
@@ -371,7 +370,7 @@ function AppointmentDetailPage() {
             </Panel>
           )}
 
-          {can("appointments.edit") && (appointment.status === "confirmed" || appointment.status === "completed") && !checklist.reminder_sent && (
+          {can("appointments.edit") && (appointment.status === "confirmed" || appointment.status === "completed") && !checklist["reminder_sent"] && (
             <Panel title="Actions">
               <Button className="w-full" variant="outline" onClick={() => sendReminder.mutate()} disabled={sendReminder.isPending}>
                 {sendReminder.isPending ? "Generating…" : "Generate Reminder Message"}

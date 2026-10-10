@@ -235,7 +235,7 @@ export const PROPERTY_TYPES = [
   "Other",
 ];
 
-export const STUDIO_URL = "https://murivest.co.ke/studio";
+export const STUDIO_URL = "https://murivest.com/studio";
 
 export type WorkLogStatus = "submitted" | "verified" | "approved" | "rejected" | "paid";
 export type MasterDbStatus = "yes" | "no" | "not_applicable";

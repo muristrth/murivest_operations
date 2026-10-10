@@ -331,7 +331,7 @@ function StudioAccessPanel() {
     "The Managing Director verifies and approves each entry. Approved work moves into your wallet balance.",
   ];
   return (
-    <Panel title="How to access the Studio" description="murivest.co.ke/studio upload workflow">
+    <Panel title="How to access the Studio" description="murivest.com/studio upload workflow">
       <ol className="space-y-2.5">
         {steps.map((step, index) => (
           <li key={step} className="flex gap-3 text-sm">

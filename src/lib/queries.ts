@@ -51,7 +51,7 @@ export async function listCorrespondence(filters?: { assigned_to?: string; statu
   if (filters?.assigned_to) query = query.eq("assigned_to", filters.assigned_to);
   if (filters?.status) query = query.eq("status", filters.status);
   if (filters?.module && filters?.record_id) {
-    query = query.eq(`related_${filters.module}_id`, filters.record_id);
+    query = query.eq(`related_${filters.module}_id` as any, filters.record_id);
   }
   const { data, error } = await query;
   if (error) throw error;
