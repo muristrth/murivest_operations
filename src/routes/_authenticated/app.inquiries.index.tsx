@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { useAuth } from "@/lib/auth";
 import { listPropertyOptions, listStaff, staffName } from "@/lib/queries";
 import {
@@ -104,6 +105,7 @@ function NewInquiryDialog() {
       queryClient.invalidateQueries();
       setOpen(false);
       setForm({ ...form, prospect_name: "", phone: "", email: "", notes: "", next_action: "" });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to save the inquiry. Please try again.")),
   });

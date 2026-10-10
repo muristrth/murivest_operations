@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { listStaff, listTaskComments, getTask, listPropertyOptions } from "@/lib/queries";
 import { PRIORITY, TASK_STATUS, optionsOf, type TaskStatus } from "@/lib/constants";
 import { formatDate, formatDateTime, friendlyError, text } from "@/lib/format";
@@ -75,6 +76,7 @@ function TaskDetailPage() {
       toast.success("Task status updated.");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update status.")),
   });
@@ -116,6 +118,7 @@ function TaskDetailPage() {
       toast.success("Task details saved.");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to save details.")),
   });

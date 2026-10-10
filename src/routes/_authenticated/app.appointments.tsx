@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { listStaff, staffName } from "@/lib/queries";
 import { APPOINTMENT_FORMAT, APPOINTMENT_STATUS, optionsOf } from "@/lib/constants";
 import { formatDateTime, friendlyError, text } from "@/lib/format";
@@ -83,21 +84,13 @@ function BookAppointmentDialog() {
         created_by: auth.user?.id ?? null,
       });
       if (error) throw error;
-      if (form.attendee_id && form.attendee_id !== auth.user?.id) {
-        await supabase.from("notifications").insert({
-          recipient_id: form.attendee_id,
-          type: "new_appointment",
-          title: "New appointment scheduled",
-          body: `${form.client_name} — ${formatDateTime(form.scheduled_at)}`,
-          module: "appointments",
-        });
-      }
     },
     onSuccess: () => {
       toast.success("Appointment booked.");
       queryClient.invalidateQueries();
       setForm(empty);
       setOpen(false);
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to book the appointment.")),
   });
@@ -262,6 +255,7 @@ function AppointmentsPage() {
     onSuccess: () => {
       toast.success("Appointment updated.");
       queryClient.invalidateQueries();
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update the appointment.")),
   });

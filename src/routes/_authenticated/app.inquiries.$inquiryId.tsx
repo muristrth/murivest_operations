@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { listStaff, staffName } from "@/lib/queries";
 import {
   ESCALATION,
@@ -116,6 +117,7 @@ function InquiryDetail() {
     onSuccess: () => {
       toast.success("Inquiry updated.");
       queryClient.invalidateQueries();
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update the inquiry.")),
   });
@@ -141,6 +143,7 @@ function InquiryDetail() {
       queryClient.invalidateQueries({ queryKey: ["inquiry", inquiryId] });
       setEscalateOpen(false);
       setEscalationForm({ category: "other", reason: "", priority: "high" });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to create escalation.")),
   });

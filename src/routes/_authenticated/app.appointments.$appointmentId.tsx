@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { listStaff, staffName } from "@/lib/queries";
 import { APPOINTMENT_FORMAT, APPOINTMENT_STATUS, optionsOf } from "@/lib/constants";
 import { formatDateTime, friendlyError, text } from "@/lib/format";
@@ -93,6 +94,7 @@ function AppointmentDetailPage() {
       toast.success("Appointment saved.");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["appointment", appointmentId] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to save the appointment.")),
   });
@@ -106,6 +108,7 @@ function AppointmentDetailPage() {
       toast.success("Appointment status updated.");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["appointment", appointmentId] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update status.")),
   });
@@ -125,6 +128,7 @@ function AppointmentDetailPage() {
       });
       setChecklist({ ...checklist, confirmation_sent: true });
       toast.success("Confirmation message generated.");
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to send confirmation.")),
   });
@@ -144,6 +148,7 @@ function AppointmentDetailPage() {
       });
       setChecklist({ ...checklist, reminder_sent: true });
       toast.success("Reminder message generated.");
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to send reminder.")),
   });
@@ -154,6 +159,7 @@ function AppointmentDetailPage() {
       toast.success("Appointment marked as completed.");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["appointment", appointmentId] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to complete appointment.")),
   });

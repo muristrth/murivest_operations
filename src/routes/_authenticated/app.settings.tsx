@@ -25,6 +25,7 @@ function SettingsPage() {
         desktop_notifications?: boolean | null;
         notify_task_assigned?: boolean | null;
         notify_task_deadline?: boolean | null;
+        notify_inquiry?: boolean | null;
         notify_appointment?: boolean | null;
         notify_followup?: boolean | null;
         notify_escalation?: boolean | null;
@@ -43,6 +44,7 @@ function SettingsPage() {
   const [inAppNotifications, setInAppNotifications] = useState(profileWithNotifications?.in_app_notifications ?? true);
   const [notifyTaskAssigned, setNotifyTaskAssigned] = useState(profileWithNotifications?.notify_task_assigned ?? true);
   const [notifyTaskDeadline, setNotifyTaskDeadline] = useState(profileWithNotifications?.notify_task_deadline ?? true);
+  const [notifyInquiry, setNotifyInquiry] = useState(profileWithNotifications?.notify_inquiry ?? true);
   const [notifyAppointment, setNotifyAppointment] = useState(profileWithNotifications?.notify_appointment ?? true);
   const [notifyFollowup, setNotifyFollowup] = useState(profileWithNotifications?.notify_followup ?? true);
   const [notifyEscalation, setNotifyEscalation] = useState(profileWithNotifications?.notify_escalation ?? true);
@@ -66,6 +68,7 @@ function SettingsPage() {
           in_app_notifications: inAppNotifications,
           notify_task_assigned: notifyTaskAssigned,
           notify_task_deadline: notifyTaskDeadline,
+          notify_inquiry: notifyInquiry,
           notify_appointment: notifyAppointment,
           notify_followup: notifyFollowup,
           notify_escalation: notifyEscalation,
@@ -165,6 +168,16 @@ function SettingsPage() {
                       onCheckedChange={(checked) => setNotifyTaskDeadline(checked === true)}
                     />
                     <label htmlFor="notifyTaskDeadline" className="text-sm">Task deadline approaching/overdue</label>
+                  </div>
+                </Field>
+                <Field label="">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="notifyInquiry"
+                      checked={notifyInquiry}
+                      onCheckedChange={(checked) => setNotifyInquiry(checked === true)}
+                    />
+                    <label htmlFor="notifyInquiry" className="text-sm">New inquiry received</label>
                   </div>
                 </Field>
               </div>

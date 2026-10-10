@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { useAuth } from "@/lib/auth";
 import { listStaff, listTasks, getTask, listTaskComments, listPropertyOptions } from "@/lib/queries";
 import {
@@ -93,6 +94,7 @@ function NewTaskDialog() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setForm(empty);
       setOpen(false);
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to create the task.")),
   });

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { useAuth } from "@/lib/auth";
 import { endOfTodayISO, formatDate, friendlyError, startOfTodayISO, text, todayISO } from "@/lib/format";
 import { Field, LoadingState, PageHeader, Panel, StatCard } from "@/components/app/ui-kit";
@@ -83,6 +84,7 @@ function ReportsPage() {
       setMdAttention("");
       setPriorities("");
       queryClient.invalidateQueries();
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to submit the report.")),
   });

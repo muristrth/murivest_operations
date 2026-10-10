@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { PROPERTY_STATUS, PROPERTY_TYPES, REVIEW_STATUS, optionsOf } from "@/lib/constants";
 import { formatDateTime, formatMoney, formatNumber, friendlyError, text } from "@/lib/format";
 import {
@@ -201,6 +202,7 @@ function PropertyDetailPage() {
       toast.success("Review recorded.");
       setReviewComment("");
       queryClient.invalidateQueries();
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to record the review.")),
   });

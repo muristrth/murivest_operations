@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { listStaff, staffName } from "@/lib/queries";
 import { FOLLOWUP_STATUS, PRIORITY, optionsOf } from "@/lib/constants";
 import { formatDate, friendlyError, text, todayISO } from "@/lib/format";
@@ -79,6 +80,7 @@ function NewFollowupDialog() {
       queryClient.invalidateQueries();
       setForm(empty);
       setOpen(false);
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to create the follow-up.")),
   });
@@ -211,6 +213,7 @@ function FollowupsPage() {
     onSuccess: () => {
       toast.success("Follow-up completed.");
       queryClient.invalidateQueries();
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update the follow-up.")),
   });

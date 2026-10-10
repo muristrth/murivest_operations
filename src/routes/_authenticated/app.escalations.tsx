@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { flushEmailQueue } from "@/lib/email-dispatch";
 import { useAuth } from "@/lib/auth";
 import { listStaff, listEscalations } from "@/lib/queries";
 import {
@@ -83,6 +84,7 @@ function NewEscalationDialog() {
       queryClient.invalidateQueries({ queryKey: ["escalations"] });
       setForm(empty);
       setOpen(false);
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to create the escalation.")),
   });
@@ -225,6 +227,7 @@ function EscalationDetailDialog({ escalationId }: { escalationId: string }) {
     onSuccess: () => {
       toast.success("Escalation updated.");
       queryClient.invalidateQueries({ queryKey: ["escalations"] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update.")),
   });
@@ -334,6 +337,7 @@ function EscalationsPage() {
     onSuccess: () => {
       toast.success("Escalation status updated.");
       queryClient.invalidateQueries({ queryKey: ["escalations"] });
+      void flushEmailQueue();
     },
     onError: (e) => toast.error(friendlyError(e, "Unable to update.")),
   });
